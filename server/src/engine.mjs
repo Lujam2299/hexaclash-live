@@ -20,7 +20,7 @@ export function createMatch() {
 
 // Internal server API: side must come from the authenticated connection.
 export function deploy(match, side, type, q, r) {
-  const stats = Object.hasOwn(UNITS, type) ? UNITS[type] : null;
+  const stats = typeof type === 'string' && Object.hasOwn(UNITS, type) ? UNITS[type] : null;
   if (match.result) return { ok: false, error: 'match-ended' };
   if ((side !== 0 && side !== 1) || !stats) return { ok: false, error: 'invalid-command' };
   if (!validCell(q, r) || (side === 0 ? q > -3 : q < 3))
