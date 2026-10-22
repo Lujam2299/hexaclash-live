@@ -139,7 +139,7 @@ export function createGameServer({
   return {
     http,
     rooms,
-    async listen(port = 8095, host = "127.0.0.1") {
+    async listen(port = 8173, host = "127.0.0.1") {
       await new Promise((resolve, reject) => {
         http.once("error", reject);
         http.listen(port, host, () => {

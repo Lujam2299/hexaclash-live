@@ -1,7 +1,7 @@
 import { createGameServer } from "./server.mjs";
 
 const server = createGameServer();
-const port = Number(process.env.PORT ?? 8095);
+const port = Number(process.env.PORT ?? 8173);
 if (!Number.isInteger(port) || port < 1 || port > 65535)
   throw new Error("Invalid PORT");
 await server.listen(port);

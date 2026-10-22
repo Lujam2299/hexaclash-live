@@ -12,11 +12,11 @@ Tablero hexagonal de radio 4, coordenadas axiales `(q, r)`. Bases en `(-4, 0)` y
 
 Cada jugador empieza con 5 de energía, acumula 1 por segundo y puede almacenar 10. Desplegar descuenta energía inmediatamente. No hay azar, cartas aleatorias ni daño entre aliados.
 
-| Unidad | Coste | Vida | Daño | Alcance | Movimiento | Ataque |
-| --- | --- | --- | --- | --- | --- | --- |
-| Tanque | 5 | 60 | 8 | 1 casilla | cada 1 s | cada 1 s |
-| Atacante | 3 | 30 | 10 | 1 casilla | cada 0,5 s | cada 1 s |
-| Tirador | 4 | 20 | 6 | 3 casillas | cada 0,75 s | cada 1 s |
+| Unidad   | Coste | Vida | Daño | Alcance    | Movimiento  | Ataque   |
+| -------- | ----- | ---- | ---- | ---------- | ----------- | -------- |
+| Tanque   | 5     | 60   | 8    | 1 casilla  | cada 1 s    | cada 1 s |
+| Atacante | 3     | 30   | 10   | 1 casilla  | cada 0,5 s  | cada 1 s |
+| Tirador  | 4     | 20   | 6    | 3 casillas | cada 0,75 s | cada 1 s |
 
 Las unidades priorizan al enemigo más cercano; a igualdad de distancia, el identificador más antiguo. Si no hay enemigos, avanzan hacia la base rival. En alcance, atacan; fuera de alcance, avanzan por una casilla que reduzca la distancia al objetivo. Las unidades recién desplegadas esperan su primer intervalo de movimiento o ataque.
 
@@ -24,6 +24,6 @@ La simulación usa pasos fijos de 50 ms. El movimiento se decide sobre el mismo 
 
 ## Alcance inicial
 
-Primero se valida el motor local. Después se conectan dos jugadores por código de sala, con servidor autoritativo y recuperación del estado tras una desconexión. En la versión conectada se propone una tolerancia de 20 segundos antes de perder por abandono; todavía no está implementada.
+El prototipo conecta dos jugadores por código de sala, con servidor autoritativo y recuperación del estado tras una desconexión. La partida continúa durante el corte. Si un jugador no vuelve en 20 segundos, pierde por abandono; si ambos agotan el margen, hay empate. Rendirse concede la victoria al rival. Se puede salir de una sala finalizada y crear otra.
 
 Quedan fuera del primer prototipo: clasificación, chat, monetización, equipamiento, obstáculos y emparejamiento público.
