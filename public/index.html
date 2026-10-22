@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#101820" />
+    <title>HexaClash Live · Arena</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script src="/app.js" type="module"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="HexaClash, inicio"
+        ><span class="brand-mark">H</span
+        ><span
+          >HEXA<span class="light">CLASH</span
+          ><small>LIVE COMBAT / PROTOTYPE 01</small></span
+        ></a
+      >
+      <div class="connection">
+        <span id="connection-dot" class="dot"></span
+        ><span id="connection">Conectando…</span>
+      </div>
+    </header>
+    <main>
+      <section class="heading">
+        <div>
+          <p class="eyebrow">DOS COMANDANTES. UN SOLO CAMPO.</p>
+          <h1>La siguiente jugada<br />no espera su turno.</h1>
+        </div>
+        <p class="intro">
+          Despliega. Avanza. Conquista.<br />Combate continuo en una arena
+          hexagonal.
+        </p>
+      </section>
+      <div class="workspace">
+        <aside class="command-panel">
+          <section class="panel room-panel" aria-labelledby="room-title">
+            <div class="section-label">
+              <span>01 / CONEXIÓN</span><span class="tag">LOCAL</span>
+            </div>
+            <h2 id="room-title">Tu sala de combate</h2>
+            <div id="lobby-controls">
+              <button id="create" class="primary" disabled>
+                Crear una sala <span aria-hidden="true">↗</span>
+              </button>
+              <div class="divider"><span>o entra con un código</span></div>
+              <form id="join-form">
+                <label for="room-code">Código de sala</label>
+                <div class="join-row">
+                  <input
+                    id="room-code"
+                    name="code"
+                    autocomplete="off"
+                    spellcheck="false"
+                    maxlength="6"
+                    pattern="[A-Fa-f0-9]{6}"
+                    placeholder="A1B2C3"
+                    required
+                  /><button id="join" type="submit" disabled>Entrar</button>
+                </div>
+              </form>
+            </div>
+            <div id="room-controls" hidden>
+              <span class="muted">Comparte este código con tu rival</span>
+              <div class="code-row">
+                <strong id="code">—</strong
+                ><button id="copy" class="subtle">Copiar</button>
+              </div>
+              <p id="your-team" class="team-label"></p>
+              <div class="player-row">
+                <span>Tú</span><span id="own-ready">En sala</span>
+              </div>
+              <div class="player-row">
+                <span>Rival</span><span id="rival-state">Esperando…</span>
+              </div>
+              <button id="ready" class="primary">Estoy listo</button>
+              <button id="leave" class="subtle full">Salir de la sala</button>
+            </div>
+          </section>
+          <section class="panel guide">
+            <div class="section-label">02 / OBJETIVO</div>
+            <h2>Rompe su defensa.</h2>
+            <p>
+              Destruye la base rival antes de que caiga la tuya. Al terminar los
+              tres minutos, gana la base con más vida.
+            </p>
+            <ol>
+              <li>Elige una unidad.</li>
+              <li>Toca un hexágono de tu zona.</li>
+              <li>La unidad avanza y combate sola.</li>
+            </ol>
+            <p class="small">
+              La energía se recupera: +1 por segundo, hasta 10.
+            </p>
+          </section>
+          <button id="reconnect" class="subtle reconnect" disabled>
+            Probar reconexión
+          </button>
+        </aside>
+        <section class="arena" aria-label="Arena de combate">
+          <div class="arena-bar">
+            <div>
+              <span class="eyebrow">CAMPO DE OPERACIONES</span>
+              <h2 id="phase">Prepara tu estrategia</h2>
+            </div>
+            <div class="timer">
+              <span>TIEMPO</span><strong id="timer">03:00</strong>
+            </div>
+          </div>
+          <div class="scoreboard">
+            <div class="base-score cyan">
+              <span>BASE CIAN <b id="cyan-hp">100</b></span
+              ><progress
+                id="cyan-bar"
+                max="100"
+                value="100"
+                aria-label="Vida de la base cian"
+              ></progress>
+            </div>
+            <span class="versus">VS</span>
+            <div class="base-score orange">
+              <span>BASE NARANJA <b id="orange-hp">100</b></span
+              ><progress
+                id="orange-bar"
+                max="100"
+                value="100"
+                aria-label="Vida de la base naranja"
+              ></progress>
+            </div>
+          </div>
+          <div class="board-wrap">
+            <svg
+              id="board"
+              viewBox="100 40 800 660"
+              role="group"
+              aria-label="Tablero hexagonal. Selecciona una casilla de tu zona para desplegar."
+            >
+              <defs>
+                <radialGradient id="board-glow">
+                  <stop offset="0" stop-color="#20414a" stop-opacity=".4" />
+                  <stop offset="1" stop-color="#101820" stop-opacity="0" />
+                </radialGradient>
+              </defs>
+              <ellipse
+                cx="500"
+                cy="360"
+                rx="380"
+                ry="320"
+                fill="url(#board-glow)"
+              />
+              <g id="cells"></g>
+              <g id="bases"></g>
+              <g id="units" aria-hidden="true"></g>
+            </svg>
+            <div class="board-caption">
+              <span><i class="cyan-dot"></i> CIAN</span
+              ><span id="board-hint">Crea o únete a una sala para comenzar</span
+              ><span><i class="orange-dot"></i> NARANJA</span>
+            </div>
+          </div>
+          <div id="result" class="result" role="status" hidden></div>
+          <div class="deployment">
+            <div class="deployment-heading">
+              <div>
+                <span class="section-label">03 / DESPLIEGUE</span>
+                <p id="selection-hint">Selecciona tu próxima unidad</p>
+              </div>
+              <div class="energy">
+                <span
+                  >ENERGÍA <strong id="energy">—</strong
+                  ><small>/ 10</small></span
+                ><progress
+                  id="energy-bar"
+                  max="10"
+                  value="0"
+                  aria-label="Tu energía"
+                ></progress>
+              </div>
+            </div>
+            <div class="unit-cards">
+              <button
+                class="unit-card selected"
+                data-unit="attacker"
+                aria-pressed="true"
+              >
+                <span class="unit-symbol">◆</span
+                ><span
+                  ><strong>Atacante</strong
+                  ><small>Rápido · cuerpo a cuerpo</small></span
+                ><b class="cost">3</b>
+              </button>
+              <button class="unit-card" data-unit="tank" aria-pressed="false">
+                <span class="unit-symbol">⬡</span
+                ><span
+                  ><strong>Tanque</strong
+                  ><small>Resistente · primera línea</small></span
+                ><b class="cost">5</b>
+              </button>
+              <button class="unit-card" data-unit="ranged" aria-pressed="false">
+                <span class="unit-symbol">⌖</span
+                ><span
+                  ><strong>Tirador</strong
+                  ><small>Frágil · largo alcance</small></span
+                ><b class="cost">4</b>
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+      <p id="notice" class="notice" role="status" aria-live="polite">
+        Conectando con el servidor local…
+      </p>
+    </main>
+    <footer>
+      <span>HEXA<span class="light">CLASH</span> / LIVE</span
+      ><span
+        >Prototipo local · Sesión por pestaña · Sin cuenta de Firebase</span
+      >
+    </footer>
+  </body>
+</html>
