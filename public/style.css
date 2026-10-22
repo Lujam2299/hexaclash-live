@@ -416,6 +416,10 @@ progress::-moz-progress-bar {
   fill: #1c3d42;
   stroke: #3b6a6c;
 }
+#bases,
+#units {
+  pointer-events: none;
+}
 .hex.home-orange {
   fill: #3c302b;
   stroke: #6c5041;
@@ -424,6 +428,13 @@ progress::-moz-progress-bar {
   cursor: pointer;
   stroke-width: 2;
   stroke: #78c9bd;
+}
+.hex.home-orange.deployable {
+  stroke: var(--orange);
+}
+.hex.home-orange.deployable:hover,
+.hex.home-orange.deployable:focus-visible {
+  fill: #714a35;
 }
 .hex.deployable:hover,
 .hex.deployable:focus-visible {

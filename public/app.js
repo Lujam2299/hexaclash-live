@@ -354,6 +354,7 @@ function render() {
     side === null
       ? ""
       : `Tu equipo: ${side ? "NARANJA · derecha" : "CIAN · izquierda"}`;
+  $("your-team").className = `team-label ${side === 1 ? "orange" : "cyan"}`;
   const status = snapshot?.status ?? "waiting",
     playing = status === "playing";
   const energy = snapshot?.players?.[side]?.energy ?? 0;
